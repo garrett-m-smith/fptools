@@ -10,15 +10,20 @@ def ssa_until_abs(W, initidx=0):
     an absorbing state. Takes the full transition matrix W and the index of the
     initial state and returns the time of absorption and the absorbing state.
     """
+    # Convert transition rate matrix to column vectors of probabilities of 
+    # transitioning to other states
     probmat = W.copy()
     np.fill_diagonal(probmat, 0.0)
     sums = probmat.sum(axis=0)
     probmat = np.divide(probmat, sums, out=np.zeros_like(probmat), where=sums!=0)
+
+    assert W[initidx, initidx] != 0, 'Initial state is an absorbing state. Pick a different initial state.'
     currstate = initidx
     time = 0.0
-    # Generating the timestep
     while W[currstate, currstate] != 0:
+        # Generate time till next jump
         time += np.random.exponential(-1/W[currstate, currstate])
+        # Generate next jump
         currstate = np.random.choice(range(probmat.shape[0]),
                 p=probmat[:,currstate])
     return time, currstate
