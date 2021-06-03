@@ -40,7 +40,7 @@ def cfptd(t, T, A, p0):
     densities at time t given the transient matrix T, the
     absorbing matrix A, and initial conditions p0.
     """
-    return A.dot(expm(T*t).dot(p0)) / splpr(T, A, p0)
+    return A.dot(expm(T*t).dot(p0)) / splittingprobabilities(T, A, p0)
 
 
 def cmfpt(T, A, p0):
@@ -48,7 +48,7 @@ def cmfpt(T, A, p0):
     the transient matrix T, the absorbing matrix A, and the
     initial conditions p0.
     """
-    return A.dot(np.linalg.matrix_power(T, -2).dot(p0)) / splpr(T, A, p0)
+    return A.dot(np.linalg.matrix_power(T, -2).dot(p0)) / splittingprobabilities(T, A, p0)
 
 
 def name_to_index(lst):
@@ -68,7 +68,8 @@ def index_to_name(n2i):
 def make_sys(transitions):
     """Takes a string of the form 'old, new, rate' and returns a dict with the
     state names and their index in the W, the full transition matrix W, the
-    transient sub-matrix T, and the absorbing matrix A.
+    transient sub-matrix T, and the absorbing matrix A. The string should have
+    one transition per line.
     """
     statenames = []
     transdict = {}
@@ -118,30 +119,6 @@ def make_sys(transitions):
     return idx, idxT, idxA, W, T, A, transdims, absdims
 
 
-def gillespie_until_abs(W, initidx=0):
-    probmat = W.copy()
-    np.fill_diagonal(probmat, 0.0)
-    #probmat /= probmat.sum(axis=0)
-    sums = probmat.sum(axis=0)
-    probmat = np.divide(probmat, sums, out=np.zeros_like(probmat), where=sums!=0)
-    currstate = initidx
-    time = 0.0
-    # Generating the timestep
-    while W[currstate, currstate] != 0:
-        time += np.random.exponential(1/-W[currstate, currstate])
-        currstate = np.random.choice(range(probmat.shape[0]),
-                p=probmat[:,currstate])
-    return time
-
-
-def rep_gillespie(W, initidx=0, n=100):
-    fpts = np.zeros(n)
-    print('Running {} stochastic simulations until absorbtion'.format(n))
-    for i in tqdm(range(n)):
-        fpts[i] = gillespie_until_abs(W, initidx)
-    return fpts
-
-
 if __name__ == "__main__":
     st = """nostr, corr, 3
 corr, nostr, 0.3
@@ -157,14 +134,5 @@ gp, nostr, 0.5"""
     print('Analytical mean and variance: {}, {}'.format(*map(lambda x:
         np.round(x, 3), [mn, vr])))
 
-    nsim = 1000
-    fpts = rep_gillespie(W, initidx=idxW['gp'], n=nsim)
-    print('From stochastic simulations\nMean: {} (SE = {}), Variance: {}'.format(*map(lambda x: np.round(x,
-        3), [np.mean(fpts), np.std(fpts)/np.sqrt(nsim), np.var(fpts)])))
-    tvec = np.linspace(0, 30, 300)
-    plt.hist(fpts, bins=30, density=True, label='FPT (stochastic simulations)')
-    plt.plot(tvec, [etd(t, T, A, p0) for t in tvec], label='Analytical FPTD')
-    plt.legend()
-    plt.show()
 
 

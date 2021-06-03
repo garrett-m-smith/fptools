@@ -67,7 +67,7 @@ def quick_posterior(prvec, lkvec, normalize=True):
 if __name__ == '__main__':
     import matplotlib.pyplot as plt
     #data = [0.286, 0.297, 0.275]
-    data = np.random.normal(0.8, 0.05, 100)  # Approx. typical
+    data = np.clip(np.random.normal(0.4, 0.1, 50), a_min=0.001, a_max=None)  # Approx. typical
     #truetau = 3.5
     T = np.array([-2., 1, 1, 1, -2, 0, 1, 0, -1]).reshape(3,3)
     A = np.array([0, 1, 0])
@@ -83,7 +83,7 @@ if __name__ == '__main__':
     
     tauvec = np.linspace(0.01, 20, 200)
     prmean = max(tauvec) / 2
-    prsd = 2.5
+    prsd = max(tauvec) / 4
     pr = np.array([prior(tau, prmean, prsd) for tau in tauvec])
     plt.plot(tauvec, pr)
     plt.title('Prior')
