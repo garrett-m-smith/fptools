@@ -51,13 +51,6 @@ def cmfpt(T, A, p0):
     return A.dot(np.linalg.matrix_power(T, -2).dot(p0)) / splittingprobabilities(T, A, p0)
 
 
-def name_to_index(lst):
-    """Returns a dict with state names as keys and indices as values
-
-    """
-    return {k: v for v, k in enumerate(set(lst))}
-    
-
 def index_to_name(n2i):
     """Takes a name-to-index dict and returns a dict with state names as keys
     and indices as values
