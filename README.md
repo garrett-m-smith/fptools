@@ -80,10 +80,10 @@ plt.show()
 ### Bayesian parameter fitting
 The `bayes` module is currently a proof-of-concept implementation. To use it,
 you need a vector of data points to fit the model to. Currently, it only
-supports fitting a single scaling parameter $`\tau`$ that scales the full
+supports fitting a single scaling parameter $$\tau$$ that scales the full
 transition matrix. The idea here is to use the exit time distribution function
 as the likelihood and truncated normal prior to calculate the posterior
-probability distribution over $`\tau`$. The slowest part is calculating the
+probability distribution over $$\tau$$. The slowest part is calculating the
 likelihood, but once that's done the `quick_posterior` function gives you the
 posterior in a trivial amount of time.
 
