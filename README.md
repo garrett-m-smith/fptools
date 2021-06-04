@@ -27,10 +27,10 @@ larger systems!
 The fp module contains the function `make_sys`, which takes a multiline string
 of transitions, e.g.,
 ```python
-   abc = """A, B, 3.0
-   B, A, 1.5
-   B, C, 2.7
-   """
+abc = """A, B, 3.0
+B, A, 1.5
+B, C, 2.7
+"""
 ```
 This string creates transitions from state A to state B, from B to A, and from
 B to C with the transition rates 3.0, 1.5, and 2.7, respectively. Note that
@@ -40,7 +40,7 @@ state, otherwise an exception is thrown.
 
 Once you create the transitions, pass them to `make_sys`:
 ```python
-    idxW, idxT, idxA, W, T, A, transdims, absdims = make_sys(abc)
+idxW, idxT, idxA, W, T, A, transdims, absdims = make_sys(abc)
 ```
 which will return dictionaries mapping state names to their numerical index in
 the full, transient, and absorbing matrices; the three matrices themselves, and
@@ -80,10 +80,10 @@ plt.show()
 ### Bayesian parameter fitting
 The `bayes` module is currently a proof-of-concept implementation. To use it,
 you need a vector of data points to fit the model to. Currently, it only
-supports fitting a single scaling parameter $\tau$ that scales the full
+supports fitting a single scaling parameter $`\tau`$ that scales the full
 transition matrix. The idea here is to use the exit time distribution function
 as the likelihood and truncated normal prior to calculate the posterior
-probability distribution over $\tau$. The slowest part is calculating the
+probability distribution over $`\tau`$. The slowest part is calculating the
 likelihood, but once that's done the `quick_posterior` function gives you the
 posterior in a trivial amount of time.
 
