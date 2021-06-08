@@ -5,6 +5,7 @@
 *.DS_Store
 coverletter.*
 intro_paper/OPMI*.pdf
+.gitignore
 
 # Jupyter Notebook
 .ipynb_checkpoints
