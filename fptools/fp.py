@@ -58,11 +58,12 @@ def index_to_name(n2i):
     return {v: k for k, v in n2i.items()}
     
 
-def make_sys(transitions):
+def make_sys(transitions, scale_rates=True):
     """Takes a string of the form 'old, new, rate' and returns a dict with the
     state names and their index in the W, the full transition matrix W, the
     transient sub-matrix T, and the absorbing matrix A. The string should have
-    one transition per line.
+    one transition per line. Scaling rates by multiplying them by the number of
+    total states is (system size) is toggled with scale_rates.
     """
     statenames = []
     transdict = {}
@@ -88,6 +89,8 @@ def make_sys(transitions):
     W = coo_matrix((rates, (rows, cols)), shape=(len(statenames), len(statenames)),
                      dtype=np.float64).toarray() + 0
     np.fill_diagonal(W, -W.sum(axis=0))
+    if scale_rates:
+        W *= len(statenames)
     # Getting transient and absorbing submatrices
     transdims = []
     absdims = []

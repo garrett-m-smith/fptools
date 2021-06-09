@@ -6,7 +6,6 @@ import numpy as np
 from scipy.linalg import expm
 from scipy.stats import norm
 from scipy.integrate import quad
-from scipy.special import logsumexp
 from tqdm import tqdm
 
 
@@ -17,12 +16,8 @@ def likelihood(tau, data, T, A, p0):
     likelihood values.
     """
     vec = [etd(t, tau*T, tau*A, p0) for t in data]
-    #return logsumexp([etd(t, tau*T, tau*A, p0) for t in data])
     #return np.prod([etd(t, tau*T, tau*A, p0) for t in data])  # Works
-    a = max(vec)
-    #return a + np.log(np.exp(vec - a).sum())
     return np.exp(sum(np.log(vec)))
-    #vec = [etd(t, tau*T, tau*A, p0) for t in data]
 
 
 def prior(tau, prmean=5.0, prsd=1.0):
@@ -43,20 +38,10 @@ def calc_evidence(tau, prmean, prsd, data, T, A, p0, domain):
     return area
 
 
-def posterior(tau, prmean, prsd, data, T, A, p0, normalize=None):
-    """Calculates the posterior distribution given the prior and the
-    likelihood. If normalize is not None, then it should be an iterable
-    containing the lower bound of the free parameter tau and the upper bound.
-    """
-    if normalize:
-        # Calculates evidence/avg. likelihood/avg. prob. of data
-        evid = calc_evidence(tau, prmean, prsd, data, T, A, p0, normalize)
-        return prior(tau, prmean, prsd) * likelihood(tau, data, T, A, p0) / evid
-    else:
-        return prior(tau, prmean, prsd) * likelihood(tau, data, T, A, p0)
-
-
 def quick_posterior(prvec, lkvec, normalize=True):
+    """Given a vector of prior probabilities and likelihoods, returns a
+    (normalized) vector of posterior probabilities.
+    """
     unnorm = prvec * lkvec
     if normalize:
         return unnorm / np.trapz(unnorm)
