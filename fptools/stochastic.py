@@ -1,6 +1,6 @@
 # Tested with CPython 3.8.5 on macOS 11.2.3
 
-from fp import *
+#from fp import *
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
