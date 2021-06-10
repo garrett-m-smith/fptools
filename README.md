@@ -20,7 +20,10 @@ algorithms, they still scale rather poorly, so be careful when setting up
 larger systems!
 
 ## Installation
-**To do**
+`fptools` can be installed via Python's built-in installer `pip`:
+```
+pip insall git+git://github.com/garrett-m-smith/fptools/tree/main/fptools.git
+```
 
 ## How to use `fptools`
 ### Setting up a system
@@ -56,7 +59,7 @@ over states. For example, to plot the exit time distribution of the system `abc`
 ```python
 import matplotlib.pyplot as plt
 tvec = np.linspace(0, 15, 200)  # Create a set of time points
-plt.plot(tvec, [etc(t, T, A, p0) for t in tvec])
+plt.plot(tvec, [etd(t, T, A, p0) for t in tvec])
 plt.show()
 ```
 
@@ -72,7 +75,7 @@ of exit times from stochastic simulations, run:
 ```python
 stoch = rep_ssa(W, 0, 1000)
 stoch.hist(bins=50, density=True, label='Stochastic simulations')
-plt.plot(tvec, [etc(t, T, A, p0) for t in tvec], label='Analytical density')
+plt.plot(tvec, [etd(t, T, A, p0) for t in tvec], label='Analytical density')
 plt.legend()
 plt.show()
 ```

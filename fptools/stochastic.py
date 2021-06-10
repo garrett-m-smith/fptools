@@ -52,7 +52,7 @@ if __name__ == "__main__":
     p0 = np.zeros(3)
     p0[init] = 1.  # Init. bias toward first abs. st.
 
-    nsim = 1000
+    nsim = 10000
     print('Exit times:')
     ets = rep_ssa(W, initidx=init, n=nsim)
     analytical = np.round(meanvar(T, p0), 3)
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     print('\tSplitting probabilities:{}'.format(empspl))
     tvec = np.linspace(0, 15, 200)
     fig, ax = plt.subplots(1, 2, figsize=(10, 5), sharey=True)
-    ets.hist(ax=ax, column='fpt', by='absstate', bins=50, density=True,
+    ets.hist(ax=ax, column='fpt', by='absstate', bins=100, density=True,
             label='FPT(stochastic simulations)', grid=False)
     ax[0].plot(tvec, [cfptd(t, T, A, p0)[0] for t in tvec], label='Analytical FPTD')
     ax[1].plot(tvec, [cfptd(t, T, A, p0)[1] for t in tvec], label='Analytical FPTD')
