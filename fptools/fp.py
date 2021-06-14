@@ -88,9 +88,9 @@ def make_sys(transitions, scale_rates=True):
     # Sparse matrix for convenient construction, but converted to dense
     W = coo_matrix((rates, (rows, cols)), shape=(len(statenames), len(statenames)),
                      dtype=np.float64).toarray() + 0
-    np.fill_diagonal(W, -W.sum(axis=0))
     if scale_rates:
         W *= len(statenames)
+    np.fill_diagonal(W, -W.sum(axis=0))
     # Getting transient and absorbing submatrices
     transdims = []
     absdims = []
