@@ -22,7 +22,7 @@ larger systems!
 ## Installation
 `fptools` can be installed via Python's built-in installer `pip`:
 ```
-pip insall git+git://github.com/garrett-m-smith/fptools/tree/main/fptools.git
+pip install git+git://github.com/garrett-m-smith/fptools/tree/main/fptools.git
 ```
 
 ## How to use `fptools`
