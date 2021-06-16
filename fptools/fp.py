@@ -92,6 +92,20 @@ def make_sys(transitions, scale_rates=True):
         W *= len(statenames)
     np.fill_diagonal(W, -W.sum(axis=0))
     # Getting transient and absorbing submatrices
+    idxT, idxA, transdims, absdims = _get_dims(W, idx)
+    T = W.copy()[np.ix_(transdims, transdims)]
+    A = W.copy()[np.ix_(absdims, transdims)]
+    # Checks:
+    assert absdims, "No absorbing states given. Check the transitions you provided."
+    return idx, idxT, idxA, W, T, A, transdims, absdims
+
+
+def _get_dims(W, idx=None):
+    """Returns the transient and absorbing dimensions of the transition rate
+    matrix W. Also returns dicts relating dimension indices and state names. If
+    idx is not None, it should be a dict of state name: index pairs for the W
+    matrix.
+    """
     transdims = []
     absdims = []
     absctr = 0
@@ -102,18 +116,27 @@ def make_sys(transitions, scale_rates=True):
     for i in range(W.shape[0]):
         if W[i,i] == 0:
             absdims.append(i)
-            idxA[i2n[i]] = absctr
+            if idx:
+                idxA[i2n[i]] = absctr
             absctr += 1
         else:
             transdims.append(i)
-            idxT[i2n[i]] = transctr
+            if idx:
+                idxT[i2n[i]] = transctr
             transctr += 1
-    T = W.copy()[np.ix_(transdims, transdims)]
-    A = W.copy()[np.ix_(absdims, transdims)]
-    # Checks:
-    assert absdims, "No absorbing states given. Check the transitions you provided."
-    return idx, idxT, idxA, W, T, A, transdims, absdims
+    return idxT, idxA, transdims, absdims
 
+
+def rescale_matrices(W, tau):
+    """Rescale the transition rate matrices by a constant tau. Returns the
+    updated W, T, and A matrices.
+    """
+    V = W.copy()
+    np.fill_diagonal(V, 0)
+    V *= tau
+    np.fill_diagonal(V, -V.sum(axis=0))
+    _, _, transdims, absdims = _get_dims(V)
+    return V, V[np.ix_(transdims, transdims)], V[np.ix_(absdims, transdims)]
 
 if __name__ == "__main__":
     st = """nostr, corr, 3
