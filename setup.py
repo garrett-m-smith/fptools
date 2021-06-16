@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='fptools',
-    version='0.1',
+    version='0.1.1',
     description='Tools for first-passage time analyses',
     url='https://github.com/garrett-m-smith/fptools',
     author='Garrett Smith',

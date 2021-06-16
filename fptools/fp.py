@@ -138,6 +138,7 @@ def rescale_matrices(W, tau):
     _, _, transdims, absdims = _get_dims(V)
     return V, V[np.ix_(transdims, transdims)], V[np.ix_(absdims, transdims)]
 
+
 if __name__ == "__main__":
     st = """nostr, corr, 3
 corr, nostr, 0.3

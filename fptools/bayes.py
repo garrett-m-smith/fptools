@@ -15,6 +15,7 @@ def likelihood(tau, data, T, A, p0):
     with an initial condition vector p0. Returns a function from tau values to
     likelihood values.
     """
+    print("NOTE: This implementation does not guarantee correct transition matrices!")
     vec = [etd(t, tau*T, tau*A, p0) for t in data]
     #return np.prod([etd(t, tau*T, tau*A, p0) for t in data])  # Works
     return np.exp(sum(np.log(vec)))
