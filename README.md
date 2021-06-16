@@ -1,5 +1,8 @@
 # `fptools`: First-passage time tools for small- to medium-sized continuous-time, discrete-state systems
 
+
+[![DOI](https://zenodo.org/badge/373835626.svg)](https://zenodo.org/badge/latestdoi/373835626)
+
 `fptools` is a set of simple tools for analyzing continuous-time, discrete-state
 stochastic processes. It allows one to enter a set of transitions with their
 associated transition rates and returns the relevant matrices suitable for
