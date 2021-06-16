@@ -112,7 +112,8 @@ def _get_dims(W, idx=None):
     transctr = 0
     idxT = dict()
     idxA = dict()
-    i2n = index_to_name(idx)
+    if idx:
+        i2n = index_to_name(idx)
     for i in range(W.shape[0]):
         if W[i,i] == 0:
             absdims.append(i)
