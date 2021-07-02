@@ -4,6 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
+from tqdm import tqdm as tqdm
 
 def ssa_until_abs(W, initidx=0):
     """Run the stochastic simulation algorithm (Gillespie, 1977) until reaching
