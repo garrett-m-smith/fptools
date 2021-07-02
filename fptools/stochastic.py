@@ -4,7 +4,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from tqdm import tqdm
+import tqdm
 
 def ssa_until_abs(W, initidx=0):
     """Run the stochastic simulation algorithm (Gillespie, 1977) until reaching
@@ -36,7 +36,7 @@ def rep_ssa(W, initidx=0, n=100):
     """
     fpts = []
     print('Running {} stochastic simulations until absorbtion'.format(n))
-    for i in tqdm(range(n)):
+    for i in tqdm.tqdm(range(n)):
         fpts.append(ssa_until_abs(W, initidx))
     return pd.DataFrame(fpts, columns=['fpt', 'absstate'])
 
