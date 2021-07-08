@@ -13,10 +13,21 @@ def ssa_until_abs(W, initidx=0):
     """
     # Convert transition rate matrix to column vectors of probabilities of 
     # transitioning to other states
+    # Taken from norris1997markov Ch.3.1
     probmat = W.copy()
-    np.fill_diagonal(probmat, 0.0)
-    sums = probmat.sum(axis=0)
-    probmat = np.divide(probmat, sums, out=np.zeros_like(probmat), where=sums!=0)
+    sums = -W.diagonal()
+    for row in range(probmat.shape[0]):
+        for col in range(probmat.shape[1]):
+            if row != col and sums[col] != 0:
+                probmat[row, col] /= sums[col]
+            elif row != col and sums[col] == 0:
+                probmat[row, col] = 0.0
+            elif row == col:
+                if sums[col] != 0:
+                    probmat[row, col] = 0.0
+                # Make sure absorbing states have prob. of 1 to stay absorbed.
+                elif sums[col] == 0:
+                    probmat[row, col] = 1.0
 
     assert W[initidx, initidx] != 0, 'Initial state is an absorbing state. Pick a different initial state.'
     currstate = initidx
