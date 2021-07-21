@@ -29,6 +29,7 @@ def ssa_until_abs(W, initidx=0):
                 elif sums[col] == 0:
                     probmat[row, col] = 1.0
 
+    assert np.allclose(probmat.sum(axis=0), 1), 'Error in transition probability matrix'
     assert W[initidx, initidx] != 0, 'Initial state is an absorbing state. Pick a different initial state.'
     currstate = initidx
     time = 0.0
