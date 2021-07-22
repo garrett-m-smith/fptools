@@ -1,6 +1,6 @@
 # Tested with CPython 3.8.5 on macOS 11.2.3
 
-#from fp import *
+from fp import *
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -37,9 +37,25 @@ def ssa_until_abs(W, initidx=0):
         # Generate time till next jump
         time += np.random.exponential(-1/W[currstate, currstate])
         # Generate next jump
-        currstate = np.random.choice(range(probmat.shape[0]),
-                p=probmat[:,currstate])
+        #currstate = np.random.choice(range(probmat.shape[0]),
+        #        p=probmat[:,currstate])
+        currstate = sample_state(probmat[:,currstate])
     return time, currstate
+
+
+def sample_state(probs):
+    """Sample the next state according to the probabilities in probs. Faster
+    than np.random.choice by an order of magnitude. Inspired by orig. Gillespie
+    1977 paper,
+    http://be150.caltech.edu/2019/handouts/12_stochastic_simulation_all_code.html,
+    and https://stackoverflow.com/a/4266562"""
+    rn = np.random.uniform()
+    csum = 0.0
+    for nextstate, pr in enumerate(probs):
+        csum += pr
+        if csum >= rn:
+            return nextstate
+    return nextstate
 
 
 def rep_ssa(W, initidx=0, n=100):
