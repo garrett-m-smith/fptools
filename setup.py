@@ -9,5 +9,7 @@ setup(
     author_email='gasmith@uni-potsdam.de',
     license='GNU GPL v3.0',
     packages=['fptools'],
-    install_requires=['numpy', 'scipy', 'tqdm', ]
+    install_requires=['numpy', 'scipy', 'tqdm', ],
+    test_suite='nose.collector',
+    tests_require=['nose']
     )

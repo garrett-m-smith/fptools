@@ -27,6 +27,9 @@ larger systems!
 ```
 pip install git+git://github.com/garrett-m-smith/fptools.git
 ```
+You can run some builtin tests using the `unittests` Python package (if you
+have it installed) by running the command `nosetests` on the command line in
+the directory where you install `fptools`.
 
 ## How to use `fptools`
 ### Setting up a system
