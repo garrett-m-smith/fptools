@@ -22,14 +22,28 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import tqdm
 
+
 def ssa_until_abs(W, initidx=0):
     """Run the stochastic simulation algorithm (Gillespie, 1977) until reaching
     an absorbing state. Takes the full transition matrix W and the index of the
     initial state and returns the time of absorption and the absorbing state.
     """
-    # Convert transition rate matrix to column vectors of probabilities of 
-    # transitioning to other states
-    # Taken from norris1997markov Ch.3.1
+    probmat = make_prob_mat(W)
+    assert W[initidx, initidx] != 0, 'Initial state is an absorbing state. Pick a different initial state.'
+    currstate = initidx
+    time = 0.0
+    while W[currstate, currstate] != 0:
+        # Generate time till next jump
+        time += np.random.exponential(-1/W[currstate, currstate])
+        # Generate next jump
+        currstate = sample_state(probmat[:,currstate])
+    return time, currstate
+
+
+def make_prob_mat(W):
+    """Convert transition rate matrix to column vectors of probabilities of transitioning to other states
+    Taken from norris1997markov Ch.3.1
+    """
     probmat = W.copy()
     sums = -W.diagonal()
     for row in range(probmat.shape[0]):
@@ -46,17 +60,7 @@ def ssa_until_abs(W, initidx=0):
                     probmat[row, col] = 1.0
 
     assert np.allclose(probmat.sum(axis=0), 1), 'Error in transition probability matrix'
-    assert W[initidx, initidx] != 0, 'Initial state is an absorbing state. Pick a different initial state.'
-    currstate = initidx
-    time = 0.0
-    while W[currstate, currstate] != 0:
-        # Generate time till next jump
-        time += np.random.exponential(-1/W[currstate, currstate])
-        # Generate next jump
-        #currstate = np.random.choice(range(probmat.shape[0]),
-        #        p=probmat[:,currstate])
-        currstate = sample_state(probmat[:,currstate])
-    return time, currstate
+    return probmat
 
 
 def sample_state(probs):
@@ -64,7 +68,8 @@ def sample_state(probs):
     than np.random.choice by an order of magnitude. Inspired by orig. Gillespie
     1977 paper,
     http://be150.caltech.edu/2019/handouts/12_stochastic_simulation_all_code.html,
-    and https://stackoverflow.com/a/4266562"""
+    and https://stackoverflow.com/a/4266562
+    """
     rn = np.random.uniform()
     csum = 0.0
     for nextstate, pr in enumerate(probs):
